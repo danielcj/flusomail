@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :flusomail, Flusomail.Repo,
-  username: "app",
-  password: "app",
+  username: "postgres",
+  password: "postgres",
   hostname: "localhost",
   database: "flusomail_dev",
   stacktrace: true,
