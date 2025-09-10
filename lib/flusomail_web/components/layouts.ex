@@ -37,10 +37,16 @@ defmodule FlusomailWeb.Layouts do
     ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <a href="/" class="text-xl font-bold">FlusoMail</a>
+        <a href="/home" class="text-xl font-bold">FlusoMail</a>
       </div>
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
+          <li>
+            <.link navigate={~p"/home"} class="btn btn-ghost">Dashboard</.link>
+          </li>
+          <li>
+            <.link navigate={~p"/organizations"} class="btn btn-ghost">Organizations</.link>
+          </li>
           <li>
             <.theme_toggle />
           </li>
@@ -58,6 +64,69 @@ defmodule FlusomailWeb.Layouts do
     """
   end
 
+  @doc """
+  Renders the auth layout for registration and login pages.
+  
+  This provides a minimal header with theme toggle and flusomail.com link,
+  and centers the content for auth forms.
+  """
+  attr :flash, :map, required: true, doc: "the map of flash messages"
+  slot :inner_block, required: true
+
+  def auth(assigns) do
+    ~H"""
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="csrf-token" content={get_csrf_token()} />
+        <.live_title default="Flusomail" suffix=" · Phoenix Framework">
+          {assigns[:page_title]}
+        </.live_title>
+        <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
+        <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+        </script>
+        <script>
+          (() => {
+            const setTheme = (theme) => {
+              if (theme === "system") {
+                localStorage.removeItem("phx:theme");
+                document.documentElement.removeAttribute("data-theme");
+              } else {
+                localStorage.setItem("phx:theme", theme);
+                document.documentElement.setAttribute("data-theme", theme);
+              }
+            };
+            if (!document.documentElement.hasAttribute("data-theme")) {
+              setTheme(localStorage.getItem("phx:theme") || "system");
+            }
+            window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "system"));
+            
+            window.addEventListener("phx:set-theme", (e) => setTheme(e.target.dataset.phxTheme));
+          })();
+        </script>
+      </head>
+      <body class="bg-base-100">
+        <header class="navbar px-4 sm:px-6 lg:px-8">
+          <div class="flex-1">
+            <a href="https://flusomail.com" class="text-xl font-bold">FlusoMail</a>
+          </div>
+          <div class="flex-none">
+            <.theme_toggle />
+          </div>
+        </header>
+        
+        <main class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          <div class="max-w-md w-full space-y-8">
+            <.flash_group flash={@flash} />
+            {render_slot(@inner_block)}
+          </div>
+        </main>
+      </body>
+    </html>
+    """
+  end
 
   @doc """
   Shows the flash group with standard titles and content.
