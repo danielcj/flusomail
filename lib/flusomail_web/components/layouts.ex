@@ -58,6 +58,7 @@ defmodule FlusomailWeb.Layouts do
     """
   end
 
+
   @doc """
   Shows the flash group with standard titles and content.
 

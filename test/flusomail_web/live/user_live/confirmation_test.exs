@@ -7,7 +7,7 @@ defmodule FlusomailWeb.UserLive.ConfirmationTest do
   alias Flusomail.Accounts
 
   setup do
-    %{unconfirmed_user: unconfirmed_user_fixture(), confirmed_user: user_fixture()}
+    %{unconfirmed_user: unconfirmed_user_without_password_fixture(), confirmed_user: user_fixture()}
   end
 
   describe "Confirm user" do
@@ -51,7 +51,7 @@ defmodule FlusomailWeb.UserLive.ConfirmationTest do
       assert Accounts.get_user!(user.id).confirmed_at
       # we are logged in now
       assert get_session(conn, :user_token)
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/home"
 
       # log out, new conn
       conn = build_conn()

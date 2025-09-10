@@ -38,7 +38,7 @@ defmodule Flusomail.AccountsTest do
   describe "get_user!/1" do
     test "raises if id is invalid" do
       assert_raise Ecto.NoResultsError, fn ->
-        Accounts.get_user!(-1)
+        Accounts.get_user!(Ecto.UUID.generate())
       end
     end
 
@@ -77,9 +77,14 @@ defmodule Flusomail.AccountsTest do
       assert "has already been taken" in errors_on(changeset).email
     end
 
-    test "registers users without password" do
+    test "registers users without password using email changeset" do
       email = unique_user_email()
-      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
+      {:ok, user} = 
+        %Flusomail.Accounts.User{}
+        |> Flusomail.Accounts.User.email_changeset(%{email: email})
+        |> Ecto.Changeset.cast(%{name: "Test User"}, [:name])
+        |> Ecto.Changeset.validate_required([:name])
+        |> Flusomail.Repo.insert()
       assert user.email == email
       assert is_nil(user.hashed_password)
       assert is_nil(user.confirmed_at)
@@ -331,7 +336,7 @@ defmodule Flusomail.AccountsTest do
 
   describe "login_user_by_magic_link/1" do
     test "confirms user and expires tokens" do
-      user = unconfirmed_user_fixture()
+      user = unconfirmed_user_without_password_fixture()
       refute user.confirmed_at
       {encoded_token, hashed_token} = generate_user_magic_link_token(user)
 

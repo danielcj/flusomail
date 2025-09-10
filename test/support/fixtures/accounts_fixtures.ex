@@ -14,7 +14,9 @@ defmodule Flusomail.AccountsFixtures do
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
-      email: unique_user_email()
+      name: "Test User",
+      email: unique_user_email(),
+      password: valid_user_password()
     })
   end
 
@@ -27,9 +29,33 @@ defmodule Flusomail.AccountsFixtures do
     user
   end
 
-  def user_fixture(attrs \\ %{}) do
-    user = unconfirmed_user_fixture(attrs)
+  def unconfirmed_user_without_password_fixture(attrs \\ %{}) do
+    # Create user without password for magic link auth
+    user_attrs = 
+      attrs
+      |> Enum.into(%{})
+      |> Map.merge(%{
+        name: "Test User",
+        email: unique_user_email()
+      })
+      |> Map.delete(:password)
+      |> Map.delete("password")
 
+    {:ok, user} =
+      %Flusomail.Accounts.User{}
+      |> Flusomail.Accounts.User.email_changeset(user_attrs)
+      |> Ecto.Changeset.cast(user_attrs, [:name])
+      |> Ecto.Changeset.validate_required([:name])
+      |> Flusomail.Repo.insert()
+
+    user
+  end
+
+  def user_fixture(attrs \\ %{}) do
+    # Create unconfirmed user without password then confirm via magic link
+    user = unconfirmed_user_without_password_fixture(attrs)
+
+    # Use magic link to confirm the user (this works for unconfirmed users without password)
     token =
       extract_user_token(fn url ->
         Accounts.deliver_login_instructions(user, url)

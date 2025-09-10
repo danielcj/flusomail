@@ -13,11 +13,13 @@ defmodule FlusomailWeb.UserLive.RegistrationTest do
     end
 
     test "redirects if already logged in", %{conn: conn} do
+      user = unconfirmed_user_fixture() |> set_password()
+      
       result =
         conn
-        |> log_in_user(user_fixture())
+        |> log_in_user(user)
         |> live(~p"/users/register")
-        |> follow_redirect(conn, ~p"/")
+        |> follow_redirect(conn, ~p"/home")
 
       assert {:ok, _conn} = result
     end

@@ -1,8 +1,8 @@
 defmodule Flusomail.Accounts.User do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Flusomail, :schema
 
   schema "users" do
+    field :name, :string
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
@@ -10,6 +10,17 @@ defmodule Flusomail.Accounts.User do
     field :authenticated_at, :utc_datetime, virtual: true
 
     timestamps(type: :utc_datetime)
+  end
+
+  @doc """
+  A user changeset for registration with name, email, and password.
+  """
+  def registration_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:name, :email, :password])
+    |> validate_required([:name])
+    |> validate_email(opts)
+    |> validate_password(opts)
   end
 
   @doc """

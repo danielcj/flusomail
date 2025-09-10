@@ -1,5 +1,5 @@
 defmodule Flusomail.Accounts.UserToken do
-  use Ecto.Schema
+  use Flusomail, :schema
   import Ecto.Query
   alias Flusomail.Accounts.UserToken
 
