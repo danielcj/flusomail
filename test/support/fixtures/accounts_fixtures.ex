@@ -31,7 +31,7 @@ defmodule Flusomail.AccountsFixtures do
 
   def unconfirmed_user_without_password_fixture(attrs \\ %{}) do
     # Create user without password for magic link auth
-    user_attrs = 
+    user_attrs =
       attrs
       |> Enum.into(%{})
       |> Map.merge(%{

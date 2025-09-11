@@ -108,50 +108,56 @@ defmodule Flusomail.Accounts do
 
   @doc """
   Registers an organization and its first admin user in a single transaction.
-  
+
   This is used during the organization onboarding flow to create:
   - A new user with name, email, and password
   - A new organization with the provided name and domain
   - An organization_user relationship with admin role
   - A domain record for verification
-  
+
   Returns {:ok, user} on success or {:error, reason} on failure.
   """
   def register_organization_and_admin_user(attrs) do
     alias Flusomail.{Organizations}
-    
+
     # Check if domain is already taken by a verified organization
-    existing_org = Repo.one(
-      from o in Organizations.Organization,
-      join: d in Organizations.Domain,
-      on: d.organization_id == o.id,
-      where: d.name == ^attrs["org_domain"] and not is_nil(d.verified_at),
-      limit: 1
-    )
-    
+    existing_org =
+      Repo.one(
+        from o in Organizations.Organization,
+          join: d in Organizations.Domain,
+          on: d.organization_id == o.id,
+          where: d.name == ^attrs["org_domain"] and not is_nil(d.verified_at),
+          limit: 1
+      )
+
     if existing_org do
       {:error, :domain_taken}
     else
       Repo.transaction(fn ->
         # Create user
         case register_user(%{
-          "name" => attrs["name"],
-          "email" => attrs["email"], 
-          "password" => attrs["password"]
-        }) do
+               "name" => attrs["name"],
+               "email" => attrs["email"],
+               "password" => attrs["password"]
+             }) do
           {:ok, user} ->
             # Create user scope
             scope = %Flusomail.Accounts.Scope{user: user}
-            
+
             # Create organization
             case Organizations.create_organization(scope, %{
-              name: attrs["org_name"],
-              slug: attrs["org_name"] |> String.downcase() |> String.replace(~r/[^a-z0-9]/, "-") |> String.replace(~r/-+/, "-") |> String.trim("-"),
-              billing_email: attrs["email"],
-              plan: "trial",
-              status: "active",
-              settings: %{}
-            }) do
+                   name: attrs["org_name"],
+                   slug:
+                     attrs["org_name"]
+                     |> String.downcase()
+                     |> String.replace(~r/[^a-z0-9]/, "-")
+                     |> String.replace(~r/-+/, "-")
+                     |> String.trim("-"),
+                   billing_email: attrs["email"],
+                   plan: "trial",
+                   status: "active",
+                   settings: %{}
+                 }) do
               {:ok, organization} ->
                 # Create organization_user relationship with admin role
                 Organizations.OrganizationUser.changeset(%Organizations.OrganizationUser{}, %{
@@ -162,21 +168,24 @@ defmodule Flusomail.Accounts do
                   joined_at: DateTime.utc_now()
                 })
                 |> Repo.insert!()
-                
+
                 # Create domain
                 %Organizations.Domain{}
-                |> Organizations.Domain.changeset(%{
-                  name: attrs["org_domain"],
-                  status: "pending"
-                }, organization)
+                |> Organizations.Domain.changeset(
+                  %{
+                    name: attrs["org_domain"],
+                    status: "pending"
+                  },
+                  organization
+                )
                 |> Repo.insert!()
-                
+
                 user
-              
+
               {:error, changeset} ->
                 Repo.rollback(changeset)
             end
-          
+
           {:error, changeset} ->
             Repo.rollback(changeset)
         end
@@ -199,7 +208,6 @@ defmodule Flusomail.Accounts do
   end
 
   def sudo_mode?(_user, _minutes), do: false
-
 
   @doc """
   Updates the user email using the given token.

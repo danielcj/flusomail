@@ -59,22 +59,25 @@ defmodule Flusomail.Organizations do
 
   @doc """
   Checks if an organization exists with the given domain and returns the verification status.
-  
+
   Returns:
   - {:available} if no organization has this domain
   - {:exists_unverified, organization} if organization exists but domain is not verified
   - {:exists_verified, organization} if organization exists and domain is verified
   """
   def check_domain_availability(domain) do
-    query = from(d in Flusomail.Organizations.Domain,
-      where: d.name == ^domain,
-      join: o in Organization,
-      on: o.id == d.organization_id,
-      select: {o, d}
-    )
-    
+    query =
+      from(d in Flusomail.Organizations.Domain,
+        where: d.name == ^domain,
+        join: o in Organization,
+        on: o.id == d.organization_id,
+        select: {o, d}
+      )
+
     case Repo.one(query) do
-      nil -> {:available}
+      nil ->
+        {:available}
+
       {org, domain_record} ->
         if domain_record.verified_at do
           {:exists_verified, org}
@@ -184,5 +187,4 @@ defmodule Flusomail.Organizations do
 
     Organization.changeset(organization, attrs, scope)
   end
-
 end

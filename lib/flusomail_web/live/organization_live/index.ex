@@ -69,7 +69,8 @@ defmodule FlusomailWeb.OrganizationLive.Index do
   @impl true
   def handle_info({type, %Flusomail.Organizations.Organization{}}, socket)
       when type in [:created, :updated, :deleted] do
-    {:noreply, stream(socket, :organizations, list_organizations(socket.assigns.current_scope), reset: true)}
+    {:noreply,
+     stream(socket, :organizations, list_organizations(socket.assigns.current_scope), reset: true)}
   end
 
   defp list_organizations(current_scope) do

@@ -14,7 +14,7 @@ defmodule FlusomailWeb.UserLive.RegistrationTest do
 
     test "redirects if already logged in", %{conn: conn} do
       user = unconfirmed_user_fixture() |> set_password()
-      
+
       result =
         conn
         |> log_in_user(user)

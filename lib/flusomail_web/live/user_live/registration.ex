@@ -18,7 +18,13 @@ defmodule FlusomailWeb.UserLive.Registration do
         </p>
       </div>
 
-      <.form for={@form} id="registration_form" phx-submit="save" phx-change="validate" class="space-y-6">
+      <.form
+        for={@form}
+        id="registration_form"
+        phx-submit="save"
+        phx-change="validate"
+        class="space-y-6"
+      >
         <.input
           field={@form[:email]}
           type="email"
@@ -75,7 +81,6 @@ defmodule FlusomailWeb.UserLive.Registration do
     changeset = Accounts.change_user_email(%Accounts.User{}, user_params, validate_unique: false)
     {:noreply, assign_form(socket, Map.put(changeset, :action, :validate))}
   end
-
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     form = to_form(changeset, as: "user")

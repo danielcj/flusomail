@@ -7,7 +7,10 @@ defmodule FlusomailWeb.UserLive.ConfirmationTest do
   alias Flusomail.Accounts
 
   setup do
-    %{unconfirmed_user: unconfirmed_user_without_password_fixture(), confirmed_user: user_fixture()}
+    %{
+      unconfirmed_user: unconfirmed_user_without_password_fixture(),
+      confirmed_user: user_fixture()
+    }
   end
 
   describe "Confirm user" do

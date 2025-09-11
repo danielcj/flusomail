@@ -66,7 +66,7 @@ defmodule FlusomailWeb.Layouts do
 
   @doc """
   Renders the auth layout for registration and login pages.
-  
+
   This provides a minimal header with theme toggle and flusomail.com link,
   and centers the content for auth forms.
   """
@@ -116,7 +116,7 @@ defmodule FlusomailWeb.Layouts do
             <.theme_toggle />
           </div>
         </header>
-        
+
         <main class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div class="max-w-md w-full space-y-8">
             <.flash_group flash={@flash} />

@@ -14,7 +14,10 @@ defmodule FlusomailWeb.OrganizationLive.Show do
           <.button navigate={~p"/organizations"}>
             <.icon name="hero-arrow-left" />
           </.button>
-          <.button variant="primary" navigate={~p"/organizations/#{@organization}/edit?return_to=show"}>
+          <.button
+            variant="primary"
+            navigate={~p"/organizations/#{@organization}/edit?return_to=show"}
+          >
             <.icon name="hero-pencil-square" /> Edit organization
           </.button>
         </:actions>

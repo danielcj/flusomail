@@ -45,7 +45,10 @@ defmodule FlusomailWeb.OrganizationLive.Form do
     socket
     |> assign(:page_title, "Edit Organization")
     |> assign(:organization, organization)
-    |> assign(:form, to_form(Organizations.change_organization(socket.assigns.current_scope, organization)))
+    |> assign(
+      :form,
+      to_form(Organizations.change_organization(socket.assigns.current_scope, organization))
+    )
   end
 
   defp apply_action(socket, :new, _params) do
@@ -54,12 +57,21 @@ defmodule FlusomailWeb.OrganizationLive.Form do
     socket
     |> assign(:page_title, "New Organization")
     |> assign(:organization, organization)
-    |> assign(:form, to_form(Organizations.change_organization(socket.assigns.current_scope, organization)))
+    |> assign(
+      :form,
+      to_form(Organizations.change_organization(socket.assigns.current_scope, organization))
+    )
   end
 
   @impl true
   def handle_event("validate", %{"organization" => organization_params}, socket) do
-    changeset = Organizations.change_organization(socket.assigns.current_scope, socket.assigns.organization, organization_params)
+    changeset =
+      Organizations.change_organization(
+        socket.assigns.current_scope,
+        socket.assigns.organization,
+        organization_params
+      )
+
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
@@ -68,7 +80,11 @@ defmodule FlusomailWeb.OrganizationLive.Form do
   end
 
   defp save_organization(socket, :edit, organization_params) do
-    case Organizations.update_organization(socket.assigns.current_scope, socket.assigns.organization, organization_params) do
+    case Organizations.update_organization(
+           socket.assigns.current_scope,
+           socket.assigns.organization,
+           organization_params
+         ) do
       {:ok, organization} ->
         {:noreply,
          socket

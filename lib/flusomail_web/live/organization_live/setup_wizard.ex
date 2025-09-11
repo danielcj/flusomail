@@ -6,10 +6,10 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
   @impl true
   def mount(_params, _session, socket) do
     user = socket.assigns.current_scope.user
-    
+
     # Check if user is already part of any organization
     user_orgs = Organizations.list_user_organizations(user)
-    
+
     # If user already belongs to organizations, redirect to dashboard
     if length(user_orgs) > 0 do
       {:ok, push_navigate(socket, to: ~p"/home")}
@@ -30,7 +30,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
     ~H"""
     <div class="min-h-screen bg-base-100 py-12 px-4">
       <div class="max-w-3xl mx-auto">
-        <%= render_step(@step, assigns) %>
+        {render_step(@step, assigns)}
       </div>
     </div>
     """
@@ -48,18 +48,22 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
     <div class="card bg-base-200 shadow-xl">
       <div class="card-body">
         <h2 class="card-title text-2xl mb-4">What would you like to do?</h2>
-        
+
         <div class="space-y-4">
-          <div class="border rounded-lg p-6 hover:bg-base-300 transition-colors cursor-pointer"
-               phx-click="start_setup">
+          <div
+            class="border rounded-lg p-6 hover:bg-base-300 transition-colors cursor-pointer"
+            phx-click="start_setup"
+          >
             <h3 class="text-xl font-semibold mb-2">🏢 Set up my organization</h3>
             <p class="text-base-content/70">
               Create your company profile and invite team members to collaborate.
             </p>
           </div>
-          
-          <div class="border rounded-lg p-6 hover:bg-base-300 transition-colors cursor-pointer"
-               phx-click="skip_setup">
+
+          <div
+            class="border rounded-lg p-6 hover:bg-base-300 transition-colors cursor-pointer"
+            phx-click="skip_setup"
+          >
             <h3 class="text-xl font-semibold mb-2">👤 Continue solo for now</h3>
             <p class="text-base-content/70">
               Skip organization setup and explore FlusoMail on your own. You can always set this up later.
@@ -93,7 +97,12 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
           </div>
         </div>
 
-        <.form for={@form} phx-change="validate_org" phx-submit={if @domain_check_result == {:available}, do: "save_org", else: "check_domain"} class="space-y-6">
+        <.form
+          for={@form}
+          phx-change="validate_org"
+          phx-submit={if @domain_check_result == {:available}, do: "save_org", else: "check_domain"}
+          class="space-y-6"
+        >
           <.input
             field={@form[:org_domain]}
             type="text"
@@ -102,7 +111,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
             required
             phx-mounted={JS.focus()}
           />
-          
+
           <%= if @domain_check_result do %>
             <%= case @domain_check_result do %>
               <% {:available} -> %>
@@ -113,7 +122,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
                     <p class="text-sm">You can create an organization with this domain.</p>
                   </div>
                 </div>
-                
+
                 <.input
                   field={@form[:org_name]}
                   type="text"
@@ -121,7 +130,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
                   placeholder="Acme Corporation"
                   required
                 />
-                
+
                 <.input
                   field={@form[:org_size]}
                   type="select"
@@ -133,42 +142,59 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
                     {"200+ employees", "enterprise"}
                   ]}
                 />
-                
+
                 <.input
                   field={@form[:industry]}
                   type="text"
                   label="Industry (Optional)"
                   placeholder="Technology, Healthcare, Finance, etc."
                 />
-
               <% {:exists_unverified, org} -> %>
                 <div class="alert alert-warning">
                   <.icon name="hero-exclamation-triangle" class="size-6" />
                   <div>
                     <p class="font-semibold">Organization Exists (Unverified)</p>
-                    <p class="text-sm">"<%= org.name %>" already exists with this domain but hasn't verified ownership yet. You can request to join or take ownership.</p>
+                    <p class="text-sm">
+                      "{org.name}" already exists with this domain but hasn't verified ownership yet. You can request to join or take ownership.
+                    </p>
                   </div>
                 </div>
-                
+
                 <div class="flex gap-4 mt-4">
-                  <.button type="button" phx-click="request_join" phx-value-org-id={org.id} class="btn btn-primary">
+                  <.button
+                    type="button"
+                    phx-click="request_join"
+                    phx-value-org-id={org.id}
+                    class="btn btn-primary"
+                  >
                     Request to Join
                   </.button>
-                  <.button type="button" phx-click="claim_ownership" phx-value-org-id={org.id} class="btn btn-secondary">
+                  <.button
+                    type="button"
+                    phx-click="claim_ownership"
+                    phx-value-org-id={org.id}
+                    class="btn btn-secondary"
+                  >
                     Claim Ownership
                   </.button>
                 </div>
-
               <% {:exists_verified, org} -> %>
                 <div class="alert alert-error">
                   <.icon name="hero-x-circle" class="size-6" />
                   <div>
                     <p class="font-semibold">Domain Already Taken</p>
-                    <p class="text-sm">"<%= org.name %>" already owns and verified this domain. You cannot create a new organization with this domain.</p>
+                    <p class="text-sm">
+                      "{org.name}" already owns and verified this domain. You cannot create a new organization with this domain.
+                    </p>
                   </div>
                 </div>
-                
-                <.button type="button" phx-click="request_invite" phx-value-org-id={org.id} class="btn btn-primary mt-4">
+
+                <.button
+                  type="button"
+                  phx-click="request_invite"
+                  phx-value-org-id={org.id}
+                  class="btn btn-primary mt-4"
+                >
                   Request Invitation
                 </.button>
             <% end %>
@@ -236,7 +262,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
                   phx-value-index={index}
                 />
               </div>
-              <button 
+              <button
                 type="button"
                 class="btn btn-ghost btn-sm mt-8"
                 phx-click="remove_invitation"
@@ -249,8 +275,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
         </div>
 
         <button type="button" class="btn btn-outline btn-sm" phx-click="add_invitation">
-          <.icon name="hero-plus" class="size-4" />
-          Add another team member
+          <.icon name="hero-plus" class="size-4" /> Add another team member
         </button>
 
         <div class="flex justify-between pt-6 mt-6 border-t">
@@ -284,27 +309,27 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
     <div class="card bg-base-200 shadow-xl">
       <div class="card-body">
         <h3 class="text-xl font-semibold mb-4">Organization Summary</h3>
-        
+
         <div class="bg-base-100 rounded-lg p-4 mb-6">
           <dl class="space-y-2">
             <div class="flex justify-between">
               <dt class="font-medium">Organization Name:</dt>
-              <dd><%= @organization[:org_name] %></dd>
+              <dd>{@organization[:org_name]}</dd>
             </div>
             <div class="flex justify-between">
               <dt class="font-medium">Domain:</dt>
-              <dd><%= @organization[:org_domain] %></dd>
+              <dd>{@organization[:org_domain]}</dd>
             </div>
             <%= if @organization[:org_size] do %>
               <div class="flex justify-between">
                 <dt class="font-medium">Size:</dt>
-                <dd><%= format_org_size(@organization[:org_size]) %></dd>
+                <dd>{format_org_size(@organization[:org_size])}</dd>
               </div>
             <% end %>
             <%= if @organization[:industry] do %>
               <div class="flex justify-between">
                 <dt class="font-medium">Industry:</dt>
-                <dd><%= @organization[:industry] %></dd>
+                <dd>{@organization[:industry]}</dd>
               </div>
             <% end %>
           </dl>
@@ -316,8 +341,8 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
             <ul class="space-y-2">
               <%= for invitation <- @invitations do %>
                 <li class="flex justify-between">
-                  <span><%= invitation[:email] %></span>
-                  <span class="badge badge-primary"><%= invitation[:role] %></span>
+                  <span>{invitation[:email]}</span>
+                  <span class="badge badge-primary">{invitation[:role]}</span>
                 </li>
               <% end %>
             </ul>
@@ -329,7 +354,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
           <div>
             <p class="font-semibold">What happens next?</p>
             <p class="text-sm">
-              We'll create your organization and send invitations to your team members. 
+              We'll create your organization and send invitations to your team members.
               You'll need to verify your domain ownership to start sending emails.
             </p>
           </div>
@@ -358,7 +383,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
       <p class="text-lg text-base-content/70 mb-8">
         Your organization has been created and invitations have been sent to your team.
       </p>
-      
+
       <div class="card bg-base-200 shadow-xl max-w-md mx-auto">
         <div class="card-body">
           <h3 class="text-xl font-semibold mb-4">Next Steps</h3>
@@ -376,7 +401,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
               <span>Set up your first campaign</span>
             </li>
           </ul>
-          
+
           <div class="card-actions justify-center mt-6">
             <.link navigate={~p"/organizations/#{@organization[:id]}"} class="btn btn-primary">
               Go to Organization Dashboard
@@ -398,38 +423,49 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
   end
 
   def handle_event("back", _params, socket) do
-    {new_step, updated_socket} = case socket.assigns.step do
-      :organization_details -> 
-        {:welcome, socket}
-      :team_invitations -> 
-        {:organization_details, socket}
-      :confirmation -> 
-        # When going back to team invitations, ensure there's at least one empty slot
-        invitations = if length(socket.assigns.invitations) == 0 do
-          [%{email: "", role: "member"}]
-        else
-          socket.assigns.invitations ++ [%{email: "", role: "member"}]
-        end
-        {:team_invitations, assign(socket, :invitations, invitations)}
-      _ -> 
-        {socket.assigns.step, socket}
-    end
+    {new_step, updated_socket} =
+      case socket.assigns.step do
+        :organization_details ->
+          {:welcome, socket}
+
+        :team_invitations ->
+          {:organization_details, socket}
+
+        :confirmation ->
+          # When going back to team invitations, ensure there's at least one empty slot
+          invitations =
+            if length(socket.assigns.invitations) == 0 do
+              [%{email: "", role: "member"}]
+            else
+              socket.assigns.invitations ++ [%{email: "", role: "member"}]
+            end
+
+          {:team_invitations, assign(socket, :invitations, invitations)}
+
+        _ ->
+          {socket.assigns.step, socket}
+      end
+
     {:noreply, assign(updated_socket, :step, new_step)}
   end
 
   def handle_event("validate_org", %{"wizard" => params}, socket) do
-    changeset = 
+    changeset =
       {%{}, %{org_name: :string, org_domain: :string, org_size: :string, industry: :string}}
       |> Ecto.Changeset.cast(params, [:org_name, :org_domain, :org_size, :industry])
-      |> Ecto.Changeset.validate_format(:org_domain, ~r/^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/, 
-          message: "must be a valid domain")
-    
-    {:noreply, assign(socket, form: to_form(Map.put(changeset, :action, :validate), as: "wizard"))}
+      |> Ecto.Changeset.validate_format(
+        :org_domain,
+        ~r/^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/,
+        message: "must be a valid domain"
+      )
+
+    {:noreply,
+     assign(socket, form: to_form(Map.put(changeset, :action, :validate), as: "wizard"))}
   end
 
   def handle_event("check_domain", %{"wizard" => params}, socket) do
     domain = String.trim(params["org_domain"] || "")
-    
+
     if domain != "" do
       result = Organizations.check_domain_availability(domain)
       {:noreply, assign(socket, :domain_check_result, result)}
@@ -440,7 +476,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
 
   def handle_event("request_join", %{"org-id" => _org_id}, socket) do
     # TODO: Implement join request functionality
-    {:noreply, 
+    {:noreply,
      socket
      |> put_flash(:info, "Join request sent! You'll be notified when an admin approves.")
      |> push_navigate(to: ~p"/home")}
@@ -466,12 +502,12 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
     # Convert string keys to atom keys for template compatibility
     organization = %{
       org_name: params["org_name"],
-      org_domain: params["org_domain"], 
+      org_domain: params["org_domain"],
       org_size: params["org_size"],
       industry: params["industry"]
     }
-    
-    {:noreply, 
+
+    {:noreply,
      socket
      |> assign(:organization, organization)
      |> assign(:invitations, [%{email: "", role: "member"}])
@@ -503,7 +539,7 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
   end
 
   def handle_event("skip_invitations", _params, socket) do
-    {:noreply, 
+    {:noreply,
      socket
      |> assign(:invitations, [])
      |> assign(:step, :confirmation)}
@@ -512,7 +548,8 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
   def handle_event("save_invitations", _params, socket) do
     # Filter out empty email invitations
     valid_invitations = Enum.filter(socket.assigns.invitations, &(&1[:email] && &1[:email] != ""))
-    {:noreply, 
+
+    {:noreply,
      socket
      |> assign(:invitations, valid_invitations)
      |> assign(:step, :confirmation)}
@@ -521,14 +558,14 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
   def handle_event("complete_setup", _params, socket) do
     user = socket.assigns.current_scope.user
     org_params = socket.assigns.organization
-    
+
     case create_organization_with_invitations(user, org_params, socket.assigns.invitations) do
       {:ok, organization} ->
         {:noreply,
          socket
          |> assign(:organization, Map.put(socket.assigns.organization, :id, organization.id))
          |> assign(:step, :success)}
-      
+
       {:error, _changeset} ->
         {:noreply,
          socket
@@ -542,7 +579,10 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
       # Create organization
       org_attrs = %{
         name: org_params[:org_name] || org_params["org_name"],
-        slug: (org_params[:org_name] || org_params["org_name"]) |> String.downcase() |> String.replace(~r/[^a-z0-9]/, "-"),
+        slug:
+          (org_params[:org_name] || org_params["org_name"])
+          |> String.downcase()
+          |> String.replace(~r/[^a-z0-9]/, "-"),
         billing_email: user.email,
         plan: "trial",
         status: "active",
@@ -551,9 +591,9 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
           industry: org_params[:industry] || org_params["industry"]
         }
       }
-      
+
       scope = %Accounts.Scope{user: user}
-      
+
       case Organizations.create_organization(scope, org_attrs) do
         {:ok, organization} ->
           # Create organization_user relationship
@@ -565,24 +605,27 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
             joined_at: DateTime.utc_now()
           })
           |> Flusomail.Repo.insert!()
-          
+
           # Create domain
           %Organizations.Domain{}
-          |> Organizations.Domain.changeset(%{
-            name: org_params[:org_domain] || org_params["org_domain"],
-            status: "pending"
-          }, organization)
+          |> Organizations.Domain.changeset(
+            %{
+              name: org_params[:org_domain] || org_params["org_domain"],
+              status: "pending"
+            },
+            organization
+          )
           |> Flusomail.Repo.insert!()
-          
+
           # Send invitations
           Enum.each(invitations, fn invitation ->
             # TODO: Create invitation records and send emails
             # For now, we'll just log them
             IO.inspect(invitation, label: "Would send invitation to")
           end)
-          
+
           organization
-          
+
         {:error, changeset} ->
           Flusomail.Repo.rollback(changeset)
       end

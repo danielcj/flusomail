@@ -10,7 +10,7 @@ defmodule Flusomail.Organizations.Domain do
     field :dmarc_verified, :boolean, default: false
     field :ses_identity_arn, :string
     field :ses_verification_token, :string
-    
+
     belongs_to :organization, Flusomail.Organizations.Organization
 
     timestamps(type: :utc_datetime)
@@ -19,13 +19,24 @@ defmodule Flusomail.Organizations.Domain do
   @doc false
   def changeset(domain, attrs, organization) do
     domain
-    |> cast(attrs, [:name, :status, :dkim_verified, :spf_verified, :dmarc_verified, :ses_identity_arn, :ses_verification_token])
+    |> cast(attrs, [
+      :name,
+      :status,
+      :dkim_verified,
+      :spf_verified,
+      :dmarc_verified,
+      :ses_identity_arn,
+      :ses_verification_token
+    ])
     |> put_change(:organization_id, organization.id)
     |> put_change(:status, attrs[:status] || "pending")
     |> validate_required([:name])
     |> validate_inclusion(:status, ["pending", "verified", "failed"])
-    |> validate_format(:name, ~r/^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/, 
-                       message: "must be a valid domain name")
+    |> validate_format(
+      :name,
+      ~r/^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/,
+      message: "must be a valid domain name"
+    )
     |> unique_constraint([:name, :organization_id])
   end
 end

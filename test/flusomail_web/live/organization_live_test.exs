@@ -4,8 +4,20 @@ defmodule FlusomailWeb.OrganizationLiveTest do
   import Phoenix.LiveViewTest
   import Flusomail.OrganizationsFixtures
 
-  @create_attrs %{name: "some name", status: "some status", plan: "some plan", slug: "some-slug", billing_email: "some billing_email"}
-  @update_attrs %{name: "some updated name", status: "some updated status", plan: "some updated plan", slug: "some-updated-slug", billing_email: "some updated billing_email"}
+  @create_attrs %{
+    name: "some name",
+    status: "some status",
+    plan: "some plan",
+    slug: "some-slug",
+    billing_email: "some billing_email"
+  }
+  @update_attrs %{
+    name: "some updated name",
+    status: "some updated status",
+    plan: "some updated plan",
+    slug: "some-updated-slug",
+    billing_email: "some updated billing_email"
+  }
   @invalid_attrs %{name: nil, status: nil, plan: nil, slug: nil, billing_email: nil}
 
   setup :register_and_log_in_user
@@ -81,7 +93,10 @@ defmodule FlusomailWeb.OrganizationLiveTest do
     test "deletes organization in listing", %{conn: conn, organization: organization} do
       {:ok, index_live, _html} = live(conn, ~p"/organizations")
 
-      assert index_live |> element("#organizations-#{organization.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#organizations-#{organization.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#organizations-#{organization.id}")
     end
   end

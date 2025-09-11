@@ -21,5 +21,4 @@ defmodule Flusomail.OrganizationsFixtures do
     {:ok, organization} = Flusomail.Organizations.create_organization(scope, attrs)
     organization
   end
-
 end

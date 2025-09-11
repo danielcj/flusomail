@@ -6,7 +6,7 @@ defmodule Flusomail.Organizations.OrganizationUser do
     field :status, :string
     field :invited_at, :utc_datetime
     field :joined_at, :utc_datetime
-    
+
     belongs_to :organization, Flusomail.Organizations.Organization
     belongs_to :user, Flusomail.Accounts.User
 

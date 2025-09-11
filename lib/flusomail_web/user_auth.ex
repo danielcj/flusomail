@@ -268,7 +268,7 @@ defmodule FlusomailWeb.UserAuth do
   defp signed_in_path_for_user(user) do
     # Check if user belongs to any organization
     user_orgs = Flusomail.Organizations.list_user_organizations(user)
-    
+
     if length(user_orgs) == 0 do
       # New user without organizations - send to wizard
       ~p"/welcome"

@@ -79,12 +79,14 @@ defmodule Flusomail.AccountsTest do
 
     test "registers users without password using email changeset" do
       email = unique_user_email()
-      {:ok, user} = 
+
+      {:ok, user} =
         %Flusomail.Accounts.User{}
         |> Flusomail.Accounts.User.email_changeset(%{email: email})
         |> Ecto.Changeset.cast(%{name: "Test User"}, [:name])
         |> Ecto.Changeset.validate_required([:name])
         |> Flusomail.Repo.insert()
+
       assert user.email == email
       assert is_nil(user.hashed_password)
       assert is_nil(user.confirmed_at)
