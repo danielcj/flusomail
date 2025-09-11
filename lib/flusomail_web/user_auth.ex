@@ -37,7 +37,7 @@ defmodule FlusomailWeb.UserAuth do
 
     conn
     |> create_or_extend_session(user, params)
-    |> redirect(to: user_return_to || signed_in_path(conn))
+    |> redirect(to: user_return_to || signed_in_path_for_user(user))
   end
 
   @doc """
@@ -258,11 +258,25 @@ defmodule FlusomailWeb.UserAuth do
 
   @doc "Returns the path to redirect to after log in."
   # the user was already logged in, redirect to settings
-  def signed_in_path(%Plug.Conn{assigns: %{current_scope: %Scope{user: %Accounts.User{}}}}) do
-    ~p"/home"
+  def signed_in_path(%Plug.Conn{assigns: %{current_scope: %Scope{user: %Accounts.User{} = user}}}) do
+    signed_in_path_for_user(user)
   end
 
   def signed_in_path(_), do: ~p"/home"
+
+  # Helper function that takes the user directly
+  defp signed_in_path_for_user(user) do
+    # Check if user belongs to any organization
+    user_orgs = Flusomail.Organizations.list_user_organizations(user)
+    
+    if length(user_orgs) == 0 do
+      # New user without organizations - send to wizard
+      ~p"/welcome"
+    else
+      # User has organizations - send to dashboard
+      ~p"/home"
+    end
+  end
 
   @doc """
   Plug for routes that require the user to be authenticated.

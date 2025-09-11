@@ -18,7 +18,7 @@ defmodule Flusomail.Organizations.OrganizationUser do
     organization_user
     |> cast(attrs, [:role, :status, :invited_at, :joined_at, :organization_id, :user_id])
     |> validate_required([:role, :status, :organization_id, :user_id])
-    |> validate_inclusion(:role, ["admin", "member", "viewer"])
+    |> validate_inclusion(:role, ["owner", "admin", "member", "viewer"])
     |> validate_inclusion(:status, ["active", "invited", "inactive"])
     |> unique_constraint([:organization_id, :user_id])
   end

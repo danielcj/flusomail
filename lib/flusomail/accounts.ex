@@ -76,8 +76,34 @@ defmodule Flusomail.Accounts do
   """
   def register_user(attrs) do
     %User{}
-    |> User.registration_changeset(attrs)
+    |> User.email_changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user changes.
+
+  ## Examples
+
+      iex> change_user_registration(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+  def change_user_registration(%User{} = user, attrs \\ %{}) do
+    User.registration_changeset(user, attrs, validate_unique: false)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for changing the user email.
+
+  ## Examples
+
+      iex> change_user_email(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+  def change_user_email(%User{} = user, attrs \\ %{}, opts \\ []) do
+    User.email_changeset(user, attrs, opts)
   end
 
   @doc """
@@ -174,20 +200,6 @@ defmodule Flusomail.Accounts do
 
   def sudo_mode?(_user, _minutes), do: false
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for changing the user email.
-
-  See `Flusomail.Accounts.User.email_changeset/3` for a list of supported options.
-
-  ## Examples
-
-      iex> change_user_email(user)
-      %Ecto.Changeset{data: %User{}}
-
-  """
-  def change_user_email(user, attrs \\ %{}, opts \\ []) do
-    User.email_changeset(user, attrs, opts)
-  end
 
   @doc """
   Updates the user email using the given token.

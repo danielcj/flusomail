@@ -45,6 +45,46 @@ defmodule Flusomail.Organizations do
   end
 
   @doc """
+  Returns the list of organizations for a specific user.
+  """
+  def list_user_organizations(user) do
+    from(ou in Flusomail.Organizations.OrganizationUser,
+      where: ou.user_id == ^user.id,
+      join: o in Organization,
+      on: o.id == ou.organization_id,
+      select: o
+    )
+    |> Repo.all()
+  end
+
+  @doc """
+  Checks if an organization exists with the given domain and returns the verification status.
+  
+  Returns:
+  - {:available} if no organization has this domain
+  - {:exists_unverified, organization} if organization exists but domain is not verified
+  - {:exists_verified, organization} if organization exists and domain is verified
+  """
+  def check_domain_availability(domain) do
+    query = from(d in Flusomail.Organizations.Domain,
+      where: d.name == ^domain,
+      join: o in Organization,
+      on: o.id == d.organization_id,
+      select: {o, d}
+    )
+    
+    case Repo.one(query) do
+      nil -> {:available}
+      {org, domain_record} ->
+        if domain_record.verified_at do
+          {:exists_verified, org}
+        else
+          {:exists_unverified, org}
+        end
+    end
+  end
+
+  @doc """
   Gets a single organization.
 
   Raises `Ecto.NoResultsError` if the Organization does not exist.

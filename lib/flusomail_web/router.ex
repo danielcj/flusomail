@@ -53,6 +53,7 @@ defmodule FlusomailWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{FlusomailWeb.UserAuth, :require_authenticated}] do
       live "/home", DashboardLive.Index, :index
+      live "/welcome", OrganizationLive.SetupWizard, :new
       live "/organizations", OrganizationLive.Index, :index
       live "/organizations/new", OrganizationLive.Form, :new
       live "/organizations/:id", OrganizationLive.Show, :show
