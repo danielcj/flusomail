@@ -20,7 +20,7 @@ defmodule Flusomail.Templates do
   def list_templates(organization_id) do
     Template
     |> where([t], t.organization_id == ^organization_id)
-    |> order_by([t], [desc: t.inserted_at])
+    |> order_by([t], desc: t.inserted_at)
     |> Repo.all()
   end
 
@@ -36,7 +36,7 @@ defmodule Flusomail.Templates do
   def list_active_templates(organization_id) do
     Template
     |> where([t], t.organization_id == ^organization_id and t.is_active == true)
-    |> order_by([t], [desc: t.inserted_at])
+    |> order_by([t], desc: t.inserted_at)
     |> Repo.all()
   end
 
@@ -53,7 +53,7 @@ defmodule Flusomail.Templates do
     Template
     |> where([t], t.organization_id == ^organization_id and t.category == ^category)
     |> where([t], t.is_active == true)
-    |> order_by([t], [desc: t.inserted_at])
+    |> order_by([t], desc: t.inserted_at)
     |> Repo.all()
   end
 
