@@ -17,8 +17,9 @@ defmodule Flusomail.Accounts.Scope do
   """
 
   alias Flusomail.Accounts.User
+  alias Flusomail.Organizations.Organization
 
-  defstruct user: nil
+  defstruct user: nil, organization: nil
 
   @doc """
   Creates a scope for the given user.
@@ -30,4 +31,30 @@ defmodule Flusomail.Accounts.Scope do
   end
 
   def for_user(nil), do: nil
+
+  @doc """
+  Creates a scope for the given user and organization.
+
+  Returns nil if no user is given.
+  """
+  def for_user_and_organization(%User{} = user, %Organization{} = organization) do
+    %__MODULE__{user: user, organization: organization}
+  end
+
+  def for_user_and_organization(%User{} = user, nil) do
+    %__MODULE__{user: user, organization: nil}
+  end
+
+  def for_user_and_organization(nil, _), do: nil
+
+  @doc """
+  Updates the organization in an existing scope.
+  """
+  def with_organization(%__MODULE__{} = scope, %Organization{} = organization) do
+    %{scope | organization: organization}
+  end
+
+  def with_organization(%__MODULE__{} = scope, nil) do
+    %{scope | organization: nil}
+  end
 end

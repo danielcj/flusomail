@@ -6,28 +6,27 @@ defmodule FlusomailWeb.UserLive.Confirmation do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
-      <div class="mx-auto max-w-sm">
-        <div class="text-center">
-          <.header>Welcome {@user.email}</.header>
-        </div>
+    <div class="mx-auto max-w-sm">
+      <div class="text-center">
+        <.header>Welcome {@user.email}</.header>
+      </div>
 
-        <.form
-          :if={!@user.confirmed_at}
-          for={@form}
-          id="confirmation_form"
-          phx-mounted={JS.focus_first()}
-          phx-submit="submit"
-          action={~p"/users/log-in?_action=confirmed"}
-          phx-trigger-action={@trigger_submit}
+      <.form
+        :if={!@user.confirmed_at}
+        for={@form}
+        id="confirmation_form"
+        phx-mounted={JS.focus_first()}
+        phx-submit="submit"
+        action={~p"/users/log-in?_action=confirmed"}
+        phx-trigger-action={@trigger_submit}
+      >
+        <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
+        <.button
+          name={@form[:remember_me].name}
+          value="true"
+          phx-disable-with="Confirming..."
+          class="btn btn-primary w-full"
         >
-          <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
-          <.button
-            name={@form[:remember_me].name}
-            value="true"
-            phx-disable-with="Confirming..."
-            class="btn btn-primary w-full"
-          >
             Confirm and stay logged in
           </.button>
           <.button phx-disable-with="Confirming..." class="btn btn-primary btn-soft w-full mt-2">
@@ -68,7 +67,6 @@ defmodule FlusomailWeb.UserLive.Confirmation do
           Tip: If you prefer passwords, you can enable them in the user settings.
         </p>
       </div>
-    </Layouts.app>
     """
   end
 

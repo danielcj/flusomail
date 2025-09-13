@@ -28,11 +28,13 @@ defmodule FlusomailWeb.OrganizationLive.SetupWizard do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="min-h-screen bg-base-100 py-12 px-4">
-      <div class="max-w-3xl mx-auto">
-        {render_step(@step, assigns)}
+    <Layouts.onboarding flash={@flash}>
+      <div class="py-12 px-4">
+        <div class="max-w-3xl mx-auto">
+          {render_step(@step, assigns)}
+        </div>
       </div>
-    </div>
+    </Layouts.onboarding>
     """
   end
 

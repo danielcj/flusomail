@@ -5,7 +5,7 @@ defmodule FlusomailWeb.PageController do
     if conn.assigns[:current_scope] do
       redirect(conn, to: ~p"/home")
     else
-      render(conn, :home, layout: false)
+      render(conn, :home)
     end
   end
 end

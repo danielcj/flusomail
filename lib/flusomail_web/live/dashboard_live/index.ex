@@ -9,48 +9,80 @@ defmodule FlusomailWeb.DashboardLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="p-8">
-      <h1 class="text-3xl font-bold mb-6">Welcome to FlusoMail</h1>
-      <p class="text-lg mb-8">You're now logged in to your dashboard.</p>
+    <Layouts.app flash={@flash} current_scope={@current_scope}>
+      <.dashboard />
+    </Layouts.app>
+    """
+  end
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="card bg-base-200 shadow-lg">
+  defp dashboard(assigns) do
+    ~H"""
+    <div class="p-8">
+      <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+      <p class="text-lg mb-8">Welcome back to FlusoMail!</p>
+
+      <div class="stats shadow w-full mb-8">
+        <div class="stat">
+          <div class="stat-figure text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <div class="stat-title">Total Sent</div>
+          <div class="stat-value">0</div>
+          <div class="stat-desc">This month</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-figure text-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="stat-title">Open Rate</div>
+          <div class="stat-value">--%</div>
+          <div class="stat-desc">30 day average</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-figure text-accent">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2z"></path>
+            </svg>
+          </div>
+          <div class="stat-title">Click Rate</div>
+          <div class="stat-value">--%</div>
+          <div class="stat-desc">30 day average</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="card bg-base-100 shadow">
           <div class="card-body">
-            <h2 class="card-title">Organizations</h2>
-            <p>Manage your organizations and team access.</p>
-            <div class="card-actions justify-end">
-              <.link navigate={~p"/organizations"} class="btn btn-primary">
-                View Organizations
+            <h2 class="card-title">Quick Actions</h2>
+            <div class="space-y-2">
+              <.link navigate={~p"/campaigns"} class="btn btn-primary btn-block">
+                Create Campaign
+              </.link>
+              <.link navigate={~p"/templates"} class="btn btn-secondary btn-block">
+                Manage Templates
+              </.link>
+              <.link navigate={~p"/contacts"} class="btn btn-accent btn-block">
+                Import Contacts
               </.link>
             </div>
           </div>
         </div>
 
-        <div class="card bg-base-200 shadow-lg">
+        <div class="card bg-base-100 shadow">
           <div class="card-body">
-            <h2 class="card-title">Domains</h2>
-            <p>Set up and verify sending domains.</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-secondary" disabled>
-                Coming Soon
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card bg-base-200 shadow-lg">
-          <div class="card-body">
-            <h2 class="card-title">Campaigns</h2>
-            <p>Create and manage email campaigns.</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-secondary" disabled>
-                Coming Soon
-              </button>
-            </div>
+            <h2 class="card-title">Recent Activity</h2>
+            <p class="text-base-content/60">No recent activity to display.</p>
           </div>
         </div>
       </div>
     </div>
     """
   end
+
 end
