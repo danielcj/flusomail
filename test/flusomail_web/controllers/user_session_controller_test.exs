@@ -18,10 +18,10 @@ defmodule FlusomailWeb.UserSessionControllerTest do
         })
 
       assert get_session(conn, :user_token)
-      assert redirected_to(conn) == ~p"/home"
+      assert redirected_to(conn) == ~p"/welcome"
 
       # Now do a logged in request and assert on the menu
-      conn = get(conn, ~p"/home")
+      conn = get(conn, ~p"/welcome")
       response = html_response(conn, 200)
       assert response =~ user.email
       assert response =~ ~p"/users/settings"
