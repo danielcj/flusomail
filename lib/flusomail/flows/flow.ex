@@ -18,7 +18,9 @@ defmodule Flusomail.Flows.Flow do
     field :activated_at, :utc_datetime
     field :paused_at, :utc_datetime
     field :completed_at, :utc_datetime
-    field :stats, :map, default: %{"total_entered" => 0, "currently_active" => 0, "completed" => 0}
+
+    field :stats, :map,
+      default: %{"total_entered" => 0, "currently_active" => 0, "completed" => 0}
 
     belongs_to :organization, Organization
     belongs_to :created_by, User
@@ -126,7 +128,6 @@ defmodule Flusomail.Flows.Flow do
         changeset
     end
   end
-
 
   defp has_trigger_node?(nodes) do
     Enum.any?(nodes, fn node ->

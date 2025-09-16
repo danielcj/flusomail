@@ -14,7 +14,9 @@ defmodule Flusomail.Repo.Migrations.CreateFlows do
       add :activated_at, :utc_datetime
       add :paused_at, :utc_datetime
       add :completed_at, :utc_datetime
-      add :stats, :map, default: %{"total_entered" => 0, "currently_active" => 0, "completed" => 0}
+
+      add :stats, :map,
+        default: %{"total_entered" => 0, "currently_active" => 0, "completed" => 0}
 
       add :organization_id, references(:organizations, on_delete: :delete_all, type: :binary_id),
         null: false
