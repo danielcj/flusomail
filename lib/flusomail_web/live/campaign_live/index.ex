@@ -31,7 +31,7 @@ defmodule FlusomailWeb.CampaignLive.Index do
             New Campaign
           </button>
         </div>
-        <div class="alert">
+        <div class="alert alert-info">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -46,7 +46,13 @@ defmodule FlusomailWeb.CampaignLive.Index do
             >
             </path>
           </svg>
-          <span>Campaign management features coming soon!</span>
+          <div>
+            <span class="font-medium">Campaigns are now visual Flows!</span>
+            <p class="text-sm mt-1">Create beautiful email campaigns with drag-and-drop flows.</p>
+            <.link navigate={~p"/flows"} class="btn btn-sm btn-primary mt-2">
+              Go to Flows
+            </.link>
+          </div>
         </div>
       </div>
     </Layouts.app>

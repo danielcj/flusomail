@@ -94,14 +94,14 @@ defmodule FlusomailWeb.DashboardLive.Index do
           <div class="card-body">
             <h2 class="card-title">Quick Actions</h2>
             <div class="space-y-2">
-              <.link navigate={~p"/campaigns"} class="btn btn-primary btn-block">
-                Create Campaign
+              <.link navigate={~p"/flows"} class="btn btn-primary btn-block">
+                Create Flow
               </.link>
-              <.link navigate={~p"/templates"} class="btn btn-secondary btn-block">
-                Manage Templates
-              </.link>
-              <.link navigate={~p"/contacts"} class="btn btn-accent btn-block">
+              <.link navigate={~p"/contacts"} class="btn btn-secondary btn-block">
                 Import Contacts
+              </.link>
+              <.link navigate={~p"/analytics"} class="btn btn-accent btn-block">
+                View Analytics
               </.link>
             </div>
           </div>

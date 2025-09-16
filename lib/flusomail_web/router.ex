@@ -68,6 +68,10 @@ defmodule FlusomailWeb.Router do
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
 
       # Dedicated LiveViews for each feature
+      live "/flows", FlowLive.Index, :index
+      live "/flows/new", FlowLive.Form, :new
+      live "/flows/:id", FlowLive.Canvas, :show
+      live "/flows/:id/edit", FlowLive.Form, :edit
       live "/campaigns", CampaignLive.Index, :index
       live "/templates", TemplateLive.Index, :index
       live "/contacts", ContactLive.Index, :index

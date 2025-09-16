@@ -31,7 +31,7 @@ defmodule FlusomailWeb.TemplateLive.Index do
             New Template
           </button>
         </div>
-        <div class="alert">
+        <div class="alert alert-info">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -46,7 +46,13 @@ defmodule FlusomailWeb.TemplateLive.Index do
             >
             </path>
           </svg>
-          <span>Template management features coming soon!</span>
+          <div>
+            <span class="font-medium">Templates are now built into Flows!</span>
+            <p class="text-sm mt-1">Create visual email sequences with our new Flow system.</p>
+            <.link navigate={~p"/flows"} class="btn btn-sm btn-primary mt-2">
+              Go to Flows
+            </.link>
+          </div>
         </div>
       </div>
     </Layouts.app>
