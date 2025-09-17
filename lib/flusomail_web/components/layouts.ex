@@ -5,6 +5,8 @@ defmodule FlusomailWeb.Layouts do
   """
   use FlusomailWeb, :html
 
+  import FlusomailWeb.Components.AppIcon
+
   # Embed all files in layouts/* within this module.
   # The default root.html.heex file contains the HTML
   # skeleton of your application, namely HTML headers
@@ -359,22 +361,13 @@ defmodule FlusomailWeb.Layouts do
                 navigate={~p"/flows"}
                 class="flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-primary/10 transition-colors duration-200 group"
               >
-                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"
-                    />
-                  </svg>
-                </div>
+                <.app_icon
+                  name="flows"
+                  class="h-4 w-4 text-white"
+                  color="blue"
+                  container={true}
+                  container_class="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                />
                 <span class="font-medium text-base-content group-hover:text-primary transition-colors duration-200">
                   Flows
                 </span>
@@ -792,7 +785,6 @@ defmodule FlusomailWeb.Layouts do
           <.icon
             name="hero-computer-desktop-micro"
             class="size-4 opacity-75 hover:opacity-100"
-            style="margin: 0; padding: 0;"
           />
         </div>
       </button>
@@ -806,7 +798,6 @@ defmodule FlusomailWeb.Layouts do
           <.icon
             name="hero-sun-micro"
             class="size-4 opacity-75 hover:opacity-100"
-            style="margin: 0; padding: 0;"
           />
         </div>
       </button>
@@ -820,7 +811,6 @@ defmodule FlusomailWeb.Layouts do
           <.icon
             name="hero-moon-micro"
             class="size-4 opacity-75 hover:opacity-100"
-            style="margin: 0; padding: 0;"
           />
         </div>
       </button>
