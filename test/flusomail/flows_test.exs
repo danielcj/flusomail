@@ -25,6 +25,23 @@ defmodule Flusomail.FlowsTest do
       assert Flows.list_flows(organization2.id) == [flow2]
     end
 
+    test "list_flows/1 returns flows for solo users (nil organization_id)" do
+      user = user_fixture()
+      flow1 = flow_fixture(%{organization_id: nil, created_by_id: user.id})
+      flow2 = flow_fixture(%{organization_id: nil, created_by_id: user.id})
+
+      # Create a flow for an organization to ensure it's not returned
+      scope = user_scope_fixture()
+      organization = organization_fixture(scope)
+      _org_flow = flow_fixture(%{organization_id: organization.id})
+
+      flows = Flows.list_flows(nil)
+      assert length(flows) == 2
+      assert flow1 in flows
+      assert flow2 in flows
+      assert Enum.all?(flows, fn f -> f.organization_id == nil end)
+    end
+
     test "get_flow!/1 returns the flow with given id" do
       flow = flow_fixture()
       assert Flows.get_flow!(flow.id) == flow
@@ -41,6 +58,22 @@ defmodule Flusomail.FlowsTest do
 
       assert_raise Ecto.NoResultsError, fn ->
         Flows.get_flow!(other_org.id, flow.id)
+      end
+    end
+
+    test "get_flow!/2 returns the flow with given id for solo users (nil organization_id)" do
+      user = user_fixture()
+      flow = flow_fixture(%{organization_id: nil, created_by_id: user.id})
+
+      # Create a flow for an organization to ensure it's not accessible
+      scope = user_scope_fixture()
+      organization = organization_fixture(scope)
+      org_flow = flow_fixture(%{organization_id: organization.id})
+
+      assert Flows.get_flow!(nil, flow.id) == flow
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Flows.get_flow!(nil, org_flow.id)
       end
     end
 

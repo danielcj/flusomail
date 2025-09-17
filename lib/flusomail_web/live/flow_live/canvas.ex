@@ -3,9 +3,16 @@ defmodule FlusomailWeb.FlowLive.Canvas do
 
   alias Flusomail.Flows
 
+  defp get_organization_id(scope) do
+    case scope.organization do
+      %{id: id} -> id
+      nil -> nil
+    end
+  end
+
   @impl true
   def mount(%{"id" => id}, _session, socket) do
-    flow = Flows.get_flow!(socket.assigns.current_scope.organization_id, id)
+    flow = Flows.get_flow!(get_organization_id(socket.assigns.current_scope), id)
 
     {:ok,
      socket

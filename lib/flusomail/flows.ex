@@ -18,8 +18,14 @@ defmodule Flusomail.Flows do
 
   """
   def list_flows(organization_id) do
-    Flow
-    |> where([f], f.organization_id == ^organization_id)
+    query =
+      if is_nil(organization_id) do
+        Flow |> where([f], is_nil(f.organization_id))
+      else
+        Flow |> where([f], f.organization_id == ^organization_id)
+      end
+
+    query
     |> order_by([f], desc: f.updated_at)
     |> Repo.all()
   end
@@ -53,7 +59,14 @@ defmodule Flusomail.Flows do
   Gets a single flow for an organization.
   """
   def get_flow!(organization_id, id) do
-    Repo.get_by!(Flow, id: id, organization_id: organization_id)
+    query =
+      if is_nil(organization_id) do
+        Flow |> where([f], f.id == ^id and is_nil(f.organization_id))
+      else
+        Flow |> where([f], f.id == ^id and f.organization_id == ^organization_id)
+      end
+
+    Repo.one!(query)
   end
 
   @doc """

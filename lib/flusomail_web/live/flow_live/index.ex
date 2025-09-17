@@ -4,9 +4,17 @@ defmodule FlusomailWeb.FlowLive.Index do
   alias Flusomail.Flows
   alias Flusomail.Flows.Flow
 
+  defp get_organization_id(scope) do
+    case scope.organization do
+      %{id: id} -> id
+      nil -> nil
+    end
+  end
+
   @impl true
   def mount(_params, _session, socket) do
-    flows = Flows.list_flows(socket.assigns.current_scope.organization_id)
+    organization_id = get_organization_id(socket.assigns.current_scope)
+    flows = Flows.list_flows(organization_id)
 
     {:ok,
      socket
@@ -23,14 +31,14 @@ defmodule FlusomailWeb.FlowLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Flow")
-    |> assign(:flow, Flows.get_flow!(socket.assigns.current_scope.organization_id, id))
+    |> assign(:flow, Flows.get_flow!(get_organization_id(socket.assigns.current_scope), id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Flow")
     |> assign(:flow, %Flow{
-      organization_id: socket.assigns.current_scope.organization_id,
+      organization_id: get_organization_id(socket.assigns.current_scope),
       created_by_id: socket.assigns.current_user.id
     })
   end
@@ -43,24 +51,24 @@ defmodule FlusomailWeb.FlowLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    flow = Flows.get_flow!(socket.assigns.current_scope.organization_id, id)
+    flow = Flows.get_flow!(get_organization_id(socket.assigns.current_scope), id)
     {:ok, _} = Flows.delete_flow(flow)
 
     {:noreply,
      socket
      |> put_flash(:info, "Flow deleted successfully")
-     |> assign(:flows, Flows.list_flows(socket.assigns.current_scope.organization_id))}
+     |> assign(:flows, Flows.list_flows(get_organization_id(socket.assigns.current_scope)))}
   end
 
   def handle_event("duplicate", %{"id" => id}, socket) do
-    flow = Flows.get_flow!(socket.assigns.current_scope.organization_id, id)
+    flow = Flows.get_flow!(get_organization_id(socket.assigns.current_scope), id)
 
     case Flows.duplicate_flow(flow, "#{flow.name} (Copy)") do
       {:ok, _new_flow} ->
         {:noreply,
          socket
          |> put_flash(:info, "Flow duplicated successfully")
-         |> assign(:flows, Flows.list_flows(socket.assigns.current_scope.organization_id))}
+         |> assign(:flows, Flows.list_flows(get_organization_id(socket.assigns.current_scope)))}
 
       {:error, _changeset} ->
         {:noreply,
@@ -70,7 +78,7 @@ defmodule FlusomailWeb.FlowLive.Index do
   end
 
   def handle_event("toggle_state", %{"id" => id}, socket) do
-    flow = Flows.get_flow!(socket.assigns.current_scope.organization_id, id)
+    flow = Flows.get_flow!(get_organization_id(socket.assigns.current_scope), id)
 
     result =
       case flow.state do
@@ -85,7 +93,7 @@ defmodule FlusomailWeb.FlowLive.Index do
         {:noreply,
          socket
          |> put_flash(:info, "Flow state updated successfully")
-         |> assign(:flows, Flows.list_flows(socket.assigns.current_scope.organization_id))}
+         |> assign(:flows, Flows.list_flows(get_organization_id(socket.assigns.current_scope)))}
 
       {:error, _} ->
         {:noreply,

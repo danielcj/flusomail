@@ -55,7 +55,7 @@ defmodule Flusomail.Flows.Flow do
       :organization_id,
       :created_by_id
     ])
-    |> validate_required([:name, :state, :flow_type, :graph, :organization_id])
+    |> validate_required([:name, :state, :flow_type, :graph])
     |> validate_inclusion(:state, @states)
     |> validate_inclusion(:flow_type, @flow_types)
     |> validate_length(:name, min: 1, max: 255)
