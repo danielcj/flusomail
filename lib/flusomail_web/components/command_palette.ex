@@ -507,15 +507,15 @@ defmodule FlusomailWeb.Components.CommandPalette do
         keywords: ["dashboard", "home", "overview", "stats"]
       },
       %{
-        id: "nav-campaigns",
-        title: "Campaigns",
-        description: "Manage email campaigns",
+        id: "nav-flows",
+        title: "Flows",
+        description: "Create visual email flows",
         icon: "hero-envelope",
-        icon_color: "from-green-500 to-green-600",
+        icon_color: "from-blue-500 to-blue-600",
         action: :navigate,
-        path: "/campaigns",
+        path: "/flows",
         section: "Navigation",
-        keywords: ["campaigns", "email", "marketing", "send"]
+        keywords: ["flows", "campaigns", "email", "marketing", "visual", "automation"]
       },
       %{
         id: "nav-templates",

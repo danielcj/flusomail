@@ -356,10 +356,10 @@ defmodule FlusomailWeb.Layouts do
               </h3>
 
               <.link
-                navigate={~p"/campaigns"}
+                navigate={~p"/flows"}
                 class="flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-primary/10 transition-colors duration-200 group"
               >
-                <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
+                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-4 w-4 text-white"
@@ -371,12 +371,12 @@ defmodule FlusomailWeb.Layouts do
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"
                     />
                   </svg>
                 </div>
                 <span class="font-medium text-base-content group-hover:text-primary transition-colors duration-200">
-                  Campaigns
+                  Flows
                 </span>
               </.link>
 
