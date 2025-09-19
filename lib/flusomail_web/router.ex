@@ -75,6 +75,8 @@ defmodule FlusomailWeb.Router do
       live "/campaigns", CampaignLive.Index, :index
       live "/templates", TemplateLive.Index, :index
       live "/contacts", ContactLive.Index, :index
+      live "/contacts/new", ContactLive.Form, :new
+      live "/contacts/:id/edit", ContactLive.Form, :edit
       live "/domains", DomainLive.Index, :index
       live "/api-keys", ApiKeyLive.Index, :index
       live "/webhooks", WebhookLive.Index, :index
