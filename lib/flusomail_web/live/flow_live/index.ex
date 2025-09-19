@@ -11,6 +11,10 @@ defmodule FlusomailWeb.FlowLive.Index do
     end
   end
 
+  defp get_user_id(scope) do
+    scope.user.id
+  end
+
   @impl true
   def mount(_params, _session, socket) do
     organization_id = get_organization_id(socket.assigns.current_scope)
@@ -39,7 +43,7 @@ defmodule FlusomailWeb.FlowLive.Index do
     |> assign(:page_title, "New Flow")
     |> assign(:flow, %Flow{
       organization_id: get_organization_id(socket.assigns.current_scope),
-      created_by_id: socket.assigns.current_user.id
+      created_by_id: get_user_id(socket.assigns.current_scope)
     })
   end
 

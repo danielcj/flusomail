@@ -11,6 +11,10 @@ defmodule FlusomailWeb.FlowLive.Form do
     end
   end
 
+  defp get_user_id(scope) do
+    scope.user.id
+  end
+
   @impl true
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -33,7 +37,7 @@ defmodule FlusomailWeb.FlowLive.Form do
   defp apply_action(socket, :new, _params) do
     flow = %Flow{
       organization_id: get_organization_id(socket.assigns.current_scope),
-      created_by_id: socket.assigns.current_user.id
+      created_by_id: get_user_id(socket.assigns.current_scope)
     }
 
     socket
@@ -69,7 +73,7 @@ defmodule FlusomailWeb.FlowLive.Form do
     flow_params =
       flow_params
       |> Map.put("organization_id", get_organization_id(socket.assigns.current_scope))
-      |> Map.put("created_by_id", socket.assigns.current_user.id)
+      |> Map.put("created_by_id", get_user_id(socket.assigns.current_scope))
 
     case Flows.create_flow(flow_params) do
       {:ok, flow} ->
