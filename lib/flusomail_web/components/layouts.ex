@@ -764,46 +764,40 @@ defmodule FlusomailWeb.Layouts do
   """
   def theme_toggle(assigns) do
     ~H"""
-    <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
-      <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 transition-[left]" />
+    <div class="relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full h-10 w-24">
+      <div class="absolute w-8 h-8 rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-8 [[data-theme=dark]_&]:left-16 transition-[left]" />
 
       <button
-        class="relative flex p-0 cursor-pointer w-1/3 h-full justify-center items-center"
+        class="absolute left-0 flex p-0 cursor-pointer w-8 h-8 justify-center items-center rounded-full z-10"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="system"
       >
-        <div class="flex justify-center items-center w-full h-full">
-          <.icon
-            name="hero-computer-desktop-micro"
-            class="size-4 opacity-75 hover:opacity-100"
-          />
-        </div>
+        <.icon
+          name="hero-computer-desktop-micro"
+          class="size-4 opacity-75 hover:opacity-100"
+        />
       </button>
 
       <button
-        class="relative flex p-0 cursor-pointer w-1/3 h-full justify-center items-center"
+        class="absolute left-8 flex p-0 cursor-pointer w-8 h-8 justify-center items-center rounded-full z-10"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="light"
       >
-        <div class="flex justify-center items-center w-full h-full">
-          <.icon
-            name="hero-sun-micro"
-            class="size-4 opacity-75 hover:opacity-100"
-          />
-        </div>
+        <.icon
+          name="hero-sun-micro"
+          class="size-4 opacity-75 hover:opacity-100"
+        />
       </button>
 
       <button
-        class="relative flex p-0 cursor-pointer w-1/3 h-full justify-center items-center"
+        class="absolute left-16 flex p-0 cursor-pointer w-8 h-8 justify-center items-center rounded-full z-10"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="dark"
       >
-        <div class="flex justify-center items-center w-full h-full">
-          <.icon
-            name="hero-moon-micro"
-            class="size-4 opacity-75 hover:opacity-100"
-          />
-        </div>
+        <.icon
+          name="hero-moon-micro"
+          class="size-4 opacity-75 hover:opacity-100"
+        />
       </button>
     </div>
     """
