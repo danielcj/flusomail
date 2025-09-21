@@ -1,9 +1,21 @@
 defmodule FlusomailWeb.DashboardLive.Index do
   use FlusomailWeb, :live_view
 
+  alias Flusomail.Contacts
+
+  defp get_organization_id(scope) do
+    case scope.organization do
+      %{id: id} -> id
+      nil -> nil
+    end
+  end
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    organization_id = get_organization_id(socket.assigns.current_scope)
+    contact_count = Contacts.count_contacts(organization_id)
+
+    {:ok, assign(socket, :contact_count, contact_count)}
   end
 
   @impl true
@@ -78,14 +90,19 @@ defmodule FlusomailWeb.DashboardLive.Index do
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M15 15l-2 5L9 9l11 4-5 2z"
-              >
-              </path>
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 515.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 919.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
           </div>
-          <div class="stat-title">Click Rate</div>
-          <div class="stat-value">--%</div>
-          <div class="stat-desc">30 day average</div>
+          <div class="stat-title">Contacts</div>
+          <div class="stat-value"><%= @contact_count %></div>
+          <div class="stat-desc">
+            <%= if @contact_count == 0 do %>
+              <.link navigate={~p"/contacts/new"} class="link link-accent">Add your first contact</.link>
+            <% else %>
+              Total contacts
+            <% end %>
+          </div>
         </div>
       </div>
 
@@ -97,9 +114,15 @@ defmodule FlusomailWeb.DashboardLive.Index do
               <.link navigate={~p"/flows"} class="btn btn-primary btn-block">
                 Create Flow
               </.link>
-              <.link navigate={~p"/contacts"} class="btn btn-secondary btn-block">
-                Import Contacts
-              </.link>
+              <%= if @contact_count == 0 do %>
+                <.link navigate={~p"/contacts/new"} class="btn btn-secondary btn-block">
+                  Add First Contact
+                </.link>
+              <% else %>
+                <.link navigate={~p"/contacts"} class="btn btn-secondary btn-block">
+                  Manage Contacts (<%= @contact_count %>)
+                </.link>
+              <% end %>
               <.link navigate={~p"/analytics"} class="btn btn-accent btn-block">
                 View Analytics
               </.link>
